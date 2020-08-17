@@ -2,6 +2,7 @@
 import express from "express";
 import nunjucks from "nunjucks";
 import sassMiddleware from "node-sass-middleware";
+import getAllBooks from "./database";
 
 const app = express();
 const port = process.env['PORT'] || 3000;
@@ -31,6 +32,11 @@ app.get("/", (req, res) => {
     }
     res.render('index.html', model);
 });
+
+app.get("/all_books", async (request, response) => {
+    const bookRequest = await {getAllBooks()};
+    response.json(bookRequest);
+})
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`)
