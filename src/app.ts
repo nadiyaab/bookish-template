@@ -1,8 +1,12 @@
 ﻿import "dotenv/config";
-import express from "express";
+import express, { response } from "express";
 import nunjucks from "nunjucks";
 import sassMiddleware from "node-sass-middleware";
-import getAllBooks from "./database";
+import {getAllBooks, addBook, deleteBook} from "./database";
+import {getAllMembers, addMember, deleteMember} from "./database";
+import { request } from "http";
+
+//"./database";
 
 const app = express();
 const port = process.env['PORT'] || 3000;
@@ -17,8 +21,10 @@ app.use(
         outputStyle: 'compressed',
         prefix: '',
     }),
+    //no src
     express.static('public')
 );
+app.use(express.urlencoded({extended: true}));
 
 const PATH_TO_TEMPLATES = "./templates/";
 nunjucks.configure(PATH_TO_TEMPLATES, { 
@@ -28,15 +34,75 @@ nunjucks.configure(PATH_TO_TEMPLATES, {
 
 app.get("/", (req, res) => {
     const model = {
-        message: "World"
+        message: ""
     }
     res.render('index.html', model);
 });
 
-app.get("/all_books", async (request, response) => {
-    const bookRequest = await {getAllBooks()};
-    response.json(bookRequest);
+
+app.get("/member", async ( request, response) => {
+    const memberList = await getAllMembers();
+    const Template= {
+        members: memberList
+    }
+    response.render('members.html', Template);
 })
+
+// all books 
+app.get("/book", async (request, response) => {
+    const bookList = await getAllBooks();
+    const Model= {
+        books: bookList
+    }
+    response.render('books.html', Model);
+})
+
+// get a single book (findBook)
+//app.get("/book1", async (request, response) => {
+   // const bookList = await findBook(id:any);
+ //   const Model= {
+      //  books: bookList
+
+   // }
+//response.render('findBook.html', Model)
+
+//})
+
+
+//add new book to book page
+app.post("/book/add", async (request, response) => {
+    const id  = request.body.id as number;
+    const title = request.body.title as string;
+    const author = request.body.author as string;
+    const model = await addBook(id, title, author);
+    response.redirect("/book")
+})
+
+// delete book from book page
+
+app.post("/book/delete", async (request, response) => {
+    const delete_book = request.body.id
+    await deleteBook(delete_book)
+    response.redirect("/book")
+}),
+
+//add new member to member page
+app.post("/member/add", async (request, response) => {
+    const id  = request.body.id as number;
+    const first_name = request.body.first_name as string;
+    const last_name = request.body.last_name as string;
+    const email = request.body.email as string;
+    const model = await addMember(id, first_name, last_name, email);
+    response.redirect("/member")
+});
+
+// delete member from member page
+
+app.post("/member/delete", async (request, response) => {
+    const delete_member = request.body.id
+    await deleteMember(delete_member)
+    response.redirect("/member")
+});
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`)

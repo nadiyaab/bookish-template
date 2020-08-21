@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<ol>
+    {%for book in books%}
+    <li>{{book.title}}, {{book.author}}</li>
+    {% endfor %}
+
+    {%for member in members%}
+    <li>{{member.id}}, {{member.first_name}}, {{member.last_name}}, {{member.email}}</li>
+    {% endfor %}
+
+    <form method = "get" action = "/book1">
+        <label for= "id">/label>
+        <br>
+
+
+    
+
+</ol>
+
+{% endblock %} 

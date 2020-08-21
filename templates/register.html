@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+
+    <form method = "post" action = "/register">
+            <label for= "id">Add Member ID</label>
+           
+                    <input id="id" type="number" name="id"/>
+            
+            <label for= "first_name">Add First Name</label>
+           
+                  <input first_name="first_name" type="string" name="first_name"/>
+        
+    
+            <label for= "last_name">Add Last Name</label>
+         
+                  <input last_name="last_name" type="string" name="last_name"/>
+         
+             <label for= "email">Add Email</label>
+            
+                   <input email="email" type="string" name="email"/>
+          
+                
+                    <button type="submit">Submit</button>
+        </form>
+
+
+{% endblock %} 

@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<ol> 
+    {%for member in members%}
+    <li>{{member.id}}, {{member.first_name}}, {{member.last_name}}, {{member.email}}</li>
+    {% endfor %}
+    
+
+    <form method = "post" action = "/member/add">
+            <label for= "id">Add Member ID</label>
+            <br>
+                    <input id="id" type="number" name="id"/>
+            <br>
+            <label for= "first_name">Add First Name</label>
+            <br>
+                  <input first_name="first_name" type="string" name="first_name"/>
+            <br>
+    
+            <label for= "last_name">Add Last Name</label>
+            <br>
+                  <input last_name="last_name" type="string" name="last_name"/>
+            <br>
+
+             <label for= "email">Add Email</label>
+            <br>
+                   <input email="email" type="string" name="email"/>
+            <br>
+                
+                    <button type="submit">Submit</button>
+        </form>
+
+
+    <form method = "post" action = "/member/delete">
+        <label for= "id">Delete Member ID</label>
+            <br>
+                <input id="id" type="number" name="id"/>
+            <br>
+
+                <button type="submit">Submit</button>
+    </form>
+</ol>
+
+
+
+
+{% endblock %} 

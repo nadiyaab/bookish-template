@@ -1,8 +1,7 @@
 import pg from "pg";
-import promptSync from "prompt-sync";
 import Knex from "knex";
 
-const client = Knex ({
+export const client = Knex ({
     client: 'pg',
     connection: {
         host: 'localhost',
@@ -13,9 +12,71 @@ const client = Knex ({
     }
 });
 
-const getAllBooks = () => {
+//const bookshelf = require('bookshelf') (Knex)
+
+
+
+
+export const getAllBooks = () => {
     return client('book')
     .select()
+    .where("deleted", false)
 }
 
-export default {getAllBooks};
+export const getAllMembers = () => {
+    return client('member')
+    .select()
+    .where("deleted", false)
+}
+
+
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+}
+
+// interface singleBook {
+  //  id: number;
+  //  title: string;
+  //  author: string;
+  //  member_id: number;
+  // check_out_date: number;
+  // return_date: number;
+
+//}
+   
+//get single book (findBook)
+//export const findBook = (id : number) => {
+    //return client.select("*").from<Book>("book")
+    //.where('id', id).first();
+//}
+
+export const addBook = (id: number, title: string, author: string) => {
+    return client.insert({id: id, title: title, author: author}).into("book")
+}
+
+
+export const deleteBook = (id: number) => {
+    return client ('book').update("deleted", true)
+    .where("id", id)
+}
+
+
+interface Member {
+    id: number
+    first_name: string;
+    last_name: string;
+    email: string;
+}
+
+export const addMember = (id: number, first_name: string, last_name: string, email: string) => {
+    return client.insert({id: id, first_name: first_name, last_name: last_name, email: email}).into("member")
+}
+
+export const deleteMember = (id: number) => {
+    return client ('member').update("deleted", true)
+    .where("id", id)
+}
+
+

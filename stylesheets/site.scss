@@ -1,3 +1,35 @@
 ﻿body {
-  background: red;
+  background: grey;
+  margin: 0;
+}
+
+.title {
+  font-size: 104px;
+  fill: black;
+  font-family: 'Oswald', serif;
+}
+
+.nav-bar { 
+    display: flex;
+    background: white;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: row;
+  word-spacing: 2;
+}
+
+img {
+  width: 50%;
+  height: 30%;
+}
+
+
+.library-icon {
+    width: 160px;
+    margin: 25%;
 }
