@@ -5,11 +5,17 @@ import sassMiddleware from "node-sass-middleware";
 import {getAllBooks, addBook, deleteBook} from "./database";
 import {getAllMembers, addMember, deleteMember} from "./database";
 import { request } from "http";
+import { addNewUser } from "./passwords";
+import Passport from "passport";
+import passportLocal from "passport-local";
+import expresssession from "express-session";
+import cookieParser from "cookie-parser";
 
 //"./database";
 
 const app = express();
 const port = process.env['PORT'] || 3000;
+app.use(express.urlencoded({ extended: true}));
 
 const srcPath = __dirname + "/../stylesheets";
 const destPath = __dirname + "/../public";
@@ -24,7 +30,36 @@ app.use(
     //no src
     express.static('public')
 );
-app.use(express.urlencoded({extended: true}));
+
+app.use(cookieparser());
+app.use(expresssession({
+    secret: "secret"
+}));
+
+passport.serializedUser(function(user, done){
+    done(null, user);
+});
+
+passportLocal.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
+app.use(passport.initialize());
+
+const LocalStrategy = passportlocal.Strategy;
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(
+    async (email, password, done) => {
+        const member = await tryLoginMember(email, password);
+       if (member === false) {
+            return done(null, false, { message: "email or password is incorrect"})
+        }
+        else {
+           return done(null, member);
+        }
+    }
+))
 
 const PATH_TO_TEMPLATES = "./templates/";
 nunjucks.configure(PATH_TO_TEMPLATES, { 
@@ -103,6 +138,35 @@ app.post("/member/delete", async (request, response) => {
     await deleteMember(delete_member)
     response.redirect("/member")
 });
+
+// register members
+
+app.get("/register", async (request, response) => {
+    response.render('register.html')
+})
+
+app.post("/register", async (request, response) => {
+    const newUser = request.body;
+    const sqlResultRegister = await addNewUser(newUser);
+    const model = {
+        register: sqlResultRegister
+    }
+    response.render('register.html')
+})
+
+app.post("/login", async (request, response) => {
+   response.render("/login")
+});
+
+app.post("/login",
+    passport.authenticate('local', {
+       successRedirect: '/',
+        failureRedirect: '/login',
+    })
+);
+
+
+    
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`)

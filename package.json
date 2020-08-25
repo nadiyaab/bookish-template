@@ -27,7 +27,15 @@
     "nunjucks": "3.2.2",
     "pg": "8.3.0",
     "ts-node": "8.10.2",
-    "typescript": "3.9.7"
+    "typescript": "3.9.7",
+    "passport": "0.4.1",
+    "@types/passport": "0.4.5",
+    "passport-local": "1.0.0",
+    "moment": "2.27.0",
+    "cookie-parser": "1.4.5",
+    "@types/cookie-parser": "1.4.1",
+    "express-session": "1.17.1",
+    "@types/express-session": "1.15.8"
   },
   "scripts": {
     "start": "babel-node -r ts-node/register ./src/app.ts",

@@ -21,7 +21,9 @@ export const getAllBooks = () => {
     return client('book')
     .select()
     .where("deleted", false)
+   
 }
+
 
 export const getAllMembers = () => {
     return client('member')
@@ -29,7 +31,11 @@ export const getAllMembers = () => {
     .where("deleted", false)
 }
 
-
+//get member by email
+export const getMemberByEmail = (email:string) => {
+    return client.select("*").from<Member>("member")
+    .where("email", email).first()
+};
 interface Book {
     id: number;
     title: string;
@@ -68,10 +74,13 @@ interface Member {
     first_name: string;
     last_name: string;
     email: string;
+    hash: string;
+    password: string;
 }
 
+
 export const addMember = (id: number, first_name: string, last_name: string, email: string) => {
-    return client.insert({id: id, first_name: first_name, last_name: last_name, email: email}).into("member")
+   return client.insert({id: id, first_name: first_name, last_name: last_name, email: email}).into("member")
 }
 
 export const deleteMember = (id: number) => {
